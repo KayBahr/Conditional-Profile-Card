@@ -23,27 +23,56 @@ import "../style/index.css";
     }
  */
 function render(variables = {}) {
-  console.log("These are the current variables: ", variables); //print on the console
-  // here we ask the logical questions to make decisions on how to build the html
-  // if includeCover==false then we reset the cover code without the <img> tag to make the cover transparent.
-  let cover = `<div class="cover"><img src="${variables.background}" /></div>`;
+  const {
+    name = "Lucy Boilett",
+    title = "Web Developer",
+    location = "Miami, USA",
+    avatarURL = "",
+    background = "",
+    twitter = "",
+    github = "",
+    linkedin = "",
+    instagram = "",
+    includeCover = true
+  } = variables;
+
+  let cover = includeCover
+    ? `<div class="cover"><img src="${background}" /></div>`
+    : '<div class="cover"></div>';
+
+  const socialLinks = [
+    { icon: "fab fa-twitter", url: twitter },
+    { icon: "fab fa-github", url: github },
+    { icon: "fab fa-linkedin", url: linkedin },
+    { icon: "fab fa-instagram", url: instagram }
+  ]
+    .filter(link => link.url)
+    .map(
+      link => `<li><a href="${link.url}"><i class="${link.icon}"></i></a></li>`
+    )
+    .join("");
+
   if (variables.includeCover == false) cover = "<div class='cover'></div>";
 
   // reset the website body with the new html output
   document.querySelector("#widget_content").innerHTML = `<div class="widget">
             ${cover}
-          <img src="${variables.avatarURL}" class="photo" />
-          <h1>Lucy Boilett</h1>
-          <h2>Web Developer</h2>
-          <h3>Miami, USA</h3>
+          <img src="${avatarURL}" class="photo" />
+          <h1>${name}</h1>
+          <h2>${title}</h2>
+          <h3>${location}</h3>
           <ul class="position-right">
-            <li><a href="https://twitter.com/4geeksacademy"><i class="fab fa-twitter"></i></a></li>
-            <li><a href="https://github.com/4geeksacademy"><i class="fab fa-github"></i></a></li>
-            <li><a href="https://linkedin.com/4geeksacademy"><i class="fab fa-linkedin"></i></a></li>
-            <li><a href="https://instagram.com/4geeksacademy"><i class="fab fa-instagram"></i></a></li>
+            ${socialLinks}
           </ul>
         </div>
     `;
+
+  const widgetContent = document.querySelector("#widget_content");
+  if (widgetContent) {
+    widgetContent.innerHTML = html;
+  } else {
+    console.error("#widget_content element not found");
+  }
 }
 
 /**
